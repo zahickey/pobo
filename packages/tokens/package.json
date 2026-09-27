@@ -1,0 +1,10 @@
+{
+  "name": "@pobo/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/theme.ts",
+  "types": "src/theme.ts",
+  "files": [
+    "src"
+  ]
+}
