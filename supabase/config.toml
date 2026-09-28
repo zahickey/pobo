@@ -346,12 +346,17 @@ email_optional = false
 # Create OAuth credentials at https://console.cloud.google.com/apis/credentials, then set
 # SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID / _SECRET in supabase/.env.local (gitignored).
 [auth.external.google]
-enabled = false
+enabled = true
+# Comma-separated: accepts ID tokens whose `aud` matches either client.
+# The native Google Sign-In SDK's token audience varies by exact config,
+# so both are allowlisted rather than guessing which one it'll be.
 client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
 secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
 redirect_uri = ""
 url = ""
-skip_nonce_check = false
+# The native signInWithIdToken flow doesn't send a nonce the way the OAuth
+# redirect flow does; without this, Supabase rejects the token.
+skip_nonce_check = true
 
 # Allow Solana wallet holders to sign in to your project via the Sign in with Solana (SIWS, EIP-4361) standard.
 # You can configure "web3" rate limit in the [auth.rate_limit] section and set up [auth.captcha] if self-hosting.

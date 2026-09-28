@@ -37,6 +37,12 @@
             "enableSceneSupport": true
           }
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.982339084703-8hf0l6oms9e3dthgo8cbe95j24r9gdee"
+        }
       ]
     ]
   }

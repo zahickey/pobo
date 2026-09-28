@@ -13,16 +13,22 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin';
 import { themes, typography, space, radius, minTouchTarget } from '@pobo/tokens';
 import { supabase } from '../lib/supabase';
 
 type Stage = 'email' | 'code';
 
-// Sign-in with Apple / Google (roadmap Step 4's remaining piece). Apple and
-// Google both need external developer accounts we don't have yet (see
-// POBO_PRODUCT_BRIEF.md §3) — those buttons are real UI, honestly labeled,
-// rather than wired to native SDKs that can't be verified without
-// credentials only the account owner can create. Email OTP is fully live.
+GoogleSignin.configure({
+  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+});
+
+// Sign-in with Apple / Google (roadmap Step 4's remaining piece). Apple
+// needs an Apple Developer account ($99/yr) we don't have yet (see
+// POBO_PRODUCT_BRIEF.md §3) — that button is real UI, honestly labeled,
+// rather than wired to something that can't be verified without credentials
+// only the account owner can create. Google and email OTP are both fully live.
 export default function SignIn() {
   const colorScheme = useColorScheme();
   const t = themes[colorScheme === 'dark' ? 'dark' : 'light'];
@@ -32,13 +38,33 @@ export default function SignIn() {
   const [code, setCode] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  function notConfigured(provider: 'Apple' | 'Google') {
-    Alert.alert(
-      `Sign in with ${provider}`,
-      provider === 'Apple'
-        ? 'Needs an Apple Developer account ($99/yr) to enable — not set up yet.'
-        : 'Needs a Google Cloud OAuth client — not set up yet.',
-    );
+  function notConfigured(provider: 'Apple') {
+    Alert.alert(`Sign in with ${provider}`, 'Needs an Apple Developer account ($99/yr) to enable — not set up yet.');
+  }
+
+  async function signInWithGoogle() {
+    setSubmitting(true);
+    try {
+      const response = await GoogleSignin.signIn();
+      if (!isSuccessResponse(response)) {
+        setSubmitting(false);
+        return; // user cancelled
+      }
+      const idToken = response.data.idToken;
+      if (!idToken) throw new Error('Google did not return an ID token.');
+
+      const { error } = await supabase.auth.signInWithIdToken({ provider: 'google', token: idToken });
+      setSubmitting(false);
+      if (error) {
+        Alert.alert("Couldn't sign in with Google", error.message);
+        return;
+      }
+      router.back();
+    } catch (err) {
+      setSubmitting(false);
+      if (isErrorWithCode(err) && err.code === statusCodes.SIGN_IN_CANCELLED) return;
+      Alert.alert("Couldn't sign in with Google", err instanceof Error ? err.message : 'Unknown error');
+    }
   }
 
   async function sendCode() {
@@ -84,10 +110,15 @@ export default function SignIn() {
           </Pressable>
 
           <Pressable
-            onPress={() => notConfigured('Google')}
+            disabled={submitting}
+            onPress={signInWithGoogle}
             style={[styles.providerButton, { backgroundColor: t.surface, borderWidth: 1, borderColor: t.border }]}
           >
-            <Text style={[styles.providerLabel, { color: t.text }]}>Sign in with Google</Text>
+            {submitting ? (
+              <ActivityIndicator color={t.text} />
+            ) : (
+              <Text style={[styles.providerLabel, { color: t.text }]}>Sign in with Google</Text>
+            )}
           </Pressable>
 
           <View style={styles.dividerRow}>
