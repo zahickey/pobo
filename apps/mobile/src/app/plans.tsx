@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { themes, typography, space } from '@pobo/tokens';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
@@ -61,8 +61,7 @@ export default function MyPlans() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['bottom']}>
 
       <View style={styles.header}>
         <Text style={[styles.heading, { color: t.text }]}>My plans</Text>

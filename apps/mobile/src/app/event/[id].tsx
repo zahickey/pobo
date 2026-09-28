@@ -43,8 +43,8 @@ export default function EventDetail() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['bottom']}>
+      <Stack.Screen options={{ headerTitle: occurrence?.series.title ?? '' }} />
 
       {loading && <Text style={[styles.status, { color: t.textMuted }]}>Loading…</Text>}
       {error && <Text style={[styles.status, { color: t.text }]}>Couldn't load this event: {error}</Text>}

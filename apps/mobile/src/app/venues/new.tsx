@@ -13,7 +13,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { themes, typography, space, radius, minTouchTarget, type SemanticTokens } from '@pobo/tokens';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth';
@@ -78,8 +78,7 @@ export default function NewVenue() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['bottom']}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={[styles.heading, { color: t.text }]}>Add a venue</Text>

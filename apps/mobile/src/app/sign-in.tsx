@@ -12,7 +12,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { themes, typography, space, radius, minTouchTarget } from '@pobo/tokens';
 import { supabase } from '../lib/supabase';
 
@@ -68,8 +68,7 @@ export default function SignIn() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['bottom']}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <View style={styles.content}>
           <Text style={[styles.wordmark, { color: t.primary }]}>PoBo</Text>

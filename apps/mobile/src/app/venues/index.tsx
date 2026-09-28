@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack } from 'expo-router';
+import { router } from 'expo-router';
 import { themes, typography, space, radius, minTouchTarget } from '@pobo/tokens';
 import { useMyVenues } from '../../hooks/useMyVenues';
 import { useAuth } from '../../lib/auth';
@@ -16,8 +16,7 @@ export default function MyVenues() {
   const { venues, loading, refetch } = useMyVenues();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['bottom']}>
 
       <View style={styles.header}>
         <Text style={[styles.heading, { color: t.text }]}>My venues</Text>

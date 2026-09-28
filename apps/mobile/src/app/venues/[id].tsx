@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { DateTime } from 'luxon';
 import { themes, typography, space, radius, minTouchTarget } from '@pobo/tokens';
 import { supabase } from '../../lib/supabase';
@@ -69,8 +69,7 @@ export default function VenueDetail() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content} refreshControl={undefined}>
         <Text style={[styles.heading, { color: t.text }]}>{venueName || 'Venue'}</Text>
 

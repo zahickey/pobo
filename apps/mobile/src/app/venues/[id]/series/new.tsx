@@ -13,7 +13,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { themes, typography, space, radius, minTouchTarget } from '@pobo/tokens';
 import { supabase } from '../../../../lib/supabase';
 import { useCategories } from '../../../../hooks/useCategories';
@@ -101,8 +101,7 @@ export default function NewSeries() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]}>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['bottom']}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={[styles.heading, { color: t.text }]}>Add an event series</Text>

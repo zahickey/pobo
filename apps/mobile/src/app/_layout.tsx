@@ -43,10 +43,17 @@ export default function RootLayout() {
       <AuthProvider>
         <Stack
           screenOptions={{
-            headerShown: false,
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerBackTitle: '',
+            headerStyle: { backgroundColor: tokens.bg },
+            headerTintColor: tokens.primary,
             contentStyle: { backgroundColor: tokens.bg },
           }}
-        />
+        >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
       </AuthProvider>
     </SafeAreaProvider>
   );
