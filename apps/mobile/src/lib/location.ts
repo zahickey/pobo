@@ -18,20 +18,28 @@ export function useUserLocation() {
     let cancelled = false;
 
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (cancelled) return;
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (cancelled) return;
 
-      if (status !== 'granted') {
-        setPermissionDenied(true);
-        setLoading(false);
-        return;
+        if (status !== 'granted') {
+          setPermissionDenied(true);
+          setLoading(false);
+          return;
+        }
+
+        const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+        if (cancelled) return;
+
+        setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+      } catch {
+        // No GPS fix available (indoors, simulator with no location set, etc.)
+        // — fall back to the default center rather than leaving the caller
+        // stuck loading forever.
+        if (!cancelled) setLocation(null);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-
-      const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-      if (cancelled) return;
-
-      setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-      setLoading(false);
     })();
 
     return () => {

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { themes, typography, space } from '@pobo/tokens';
 import { useCategories } from '../hooks/useCategories';
 import { useOccurrences } from '../hooks/useOccurrences';
 import { useUserLocation } from '../lib/location';
+import { useAuth } from '../lib/auth';
 import type { TimeFilter } from '../lib/time';
 import { TimeFilterChips } from '../components/TimeFilterChips';
 import { CategoryChips } from '../components/CategoryChips';
@@ -26,6 +27,7 @@ export default function Discovery() {
   const { categories } = useCategories();
   const { location: userLocation } = useUserLocation();
   const { occurrences, loading, error, refetch } = useOccurrences(timeFilter, categoryIds, userLocation);
+  const { session } = useAuth();
 
   function toggleCategory(id: string) {
     setCategoryIds((prev) => (prev.includes(id) ? prev.filter((existing) => existing !== id) : [...prev, id]));
@@ -34,8 +36,13 @@ export default function Discovery() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: t.bg }]} edges={['top']}>
       <View style={styles.header}>
-        <Text style={[styles.wordmark, { color: t.primary }]}>PoBo</Text>
-        <Text style={[styles.tagline, { color: t.textMuted }]}>Your city's poster board.</Text>
+        <View>
+          <Text style={[styles.wordmark, { color: t.primary }]}>PoBo</Text>
+          <Text style={[styles.tagline, { color: t.textMuted }]}>Your city's poster board.</Text>
+        </View>
+        <Pressable onPress={() => router.push(session ? '/plans' : '/sign-in')}>
+          <Text style={[styles.headerLink, { color: t.primary }]}>{session ? 'My plans' : 'Sign in'}</Text>
+        </Pressable>
       </View>
 
       <View style={styles.filterRow}>
@@ -83,9 +90,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     paddingHorizontal: space.lg,
     paddingTop: space.sm,
     paddingBottom: space.md,
+  },
+  headerLink: {
+    fontFamily: 'InstrumentSansSemiBold',
+    fontSize: typography.size.meta,
+    marginTop: space.xs,
   },
   wordmark: {
     fontFamily: 'Gloock',

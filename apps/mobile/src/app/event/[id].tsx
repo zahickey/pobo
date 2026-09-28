@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { themes, typography, space, radius, minTouchTarget } from '@pobo/tokens';
 import { useOccurrence, setRsvp } from '../../hooks/useOccurrence';
 import { REFERENCE_TIMEZONE, formatStartLabel, isLiveNow } from '../../lib/time';
@@ -22,7 +22,7 @@ export default function EventDetail() {
     setSaving(false);
 
     if (rsvpError === 'not_signed_in') {
-      Alert.alert('Sign in to RSVP', 'Sign-in is coming soon — this button will work once auth is wired up.');
+      router.push('/sign-in');
       return;
     }
     if (rsvpError) {

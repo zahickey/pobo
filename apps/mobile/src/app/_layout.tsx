@@ -11,6 +11,7 @@ import {
   InstrumentSans_700Bold,
 } from '@expo-google-fonts/instrument-sans';
 import { themes } from '@pobo/tokens';
+import { AuthProvider } from '../lib/auth';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -39,12 +40,14 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: tokens.bg },
-        }}
-      />
+      <AuthProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: tokens.bg },
+          }}
+        />
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }
