@@ -67,9 +67,14 @@ export default function MyPlans() {
       <View style={styles.header}>
         <Text style={[styles.heading, { color: t.text }]}>My plans</Text>
         {session && (
-          <Pressable onPress={signOut}>
-            <Text style={[styles.signOut, { color: t.primary }]}>Sign out</Text>
-          </Pressable>
+          <View style={{ alignItems: 'flex-end', gap: space.xs }}>
+            <Pressable onPress={() => router.push('/venues')}>
+              <Text style={[styles.signOut, { color: t.primary }]}>My venues</Text>
+            </Pressable>
+            <Pressable onPress={signOut}>
+              <Text style={[styles.signOut, { color: t.primary }]}>Sign out</Text>
+            </Pressable>
+          </View>
         )}
       </View>
 
