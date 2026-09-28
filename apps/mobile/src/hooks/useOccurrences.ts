@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 import { supabase } from '../lib/supabase';
 import { windowForFilter, type TimeFilter } from '../lib/time';
+import { distanceMiles, type UserLocation } from '../lib/location';
 
 export interface OccurrenceListItem {
   id: string;
   starts_at: string;
   ends_at: string;
-  venue: { id: string; name: string; neighborhood: string | null };
+  venue: { id: string; name: string; neighborhood: string | null; lat: number | null; lng: number | null };
   series: {
     id: string;
     title: string;
@@ -17,10 +18,11 @@ export interface OccurrenceListItem {
   };
 }
 
-// Bounding-box / distance sort is intentionally not implemented yet — that
-// needs the map + location permission flow (roadmap Step 4, next slice).
-// This fetches by time + category only, ordered by start time.
-export function useOccurrences(filter: TimeFilter, categoryIds: string[]) {
+// Bounding-box map-region filtering is not implemented yet (that needs a
+// PostGIS query keyed to the visible map region) — this fetches everything
+// matching time + category, then sorts by distance from `sortFrom` client
+// side if given, otherwise by start time.
+export function useOccurrences(filter: TimeFilter, categoryIds: string[], sortFrom?: UserLocation | null) {
   const [occurrences, setOccurrences] = useState<OccurrenceListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export function useOccurrences(filter: TimeFilter, categoryIds: string[]) {
       .select(
         `
         id, starts_at, ends_at,
-        venue:venues!inner(id, name, neighborhood),
+        venue:venues!inner(id, name, neighborhood, lat, lng),
         series:event_series!inner(id, title, price_text, category_id, category:categories(slug, name))
       `,
       )
@@ -55,10 +57,21 @@ export function useOccurrences(filter: TimeFilter, categoryIds: string[]) {
       setError(queryError.message);
       setOccurrences([]);
     } else {
-      setOccurrences((data ?? []) as unknown as OccurrenceListItem[]);
+      const rows = (data ?? []) as unknown as OccurrenceListItem[];
+      if (sortFrom) {
+        rows.sort((a, b) => {
+          if (!a.venue.lat || !a.venue.lng) return 1;
+          if (!b.venue.lat || !b.venue.lng) return -1;
+          return (
+            distanceMiles(sortFrom, { latitude: a.venue.lat, longitude: a.venue.lng }) -
+            distanceMiles(sortFrom, { latitude: b.venue.lat, longitude: b.venue.lng })
+          );
+        });
+      }
+      setOccurrences(rows);
     }
     setLoading(false);
-  }, [filter, categoryIds.join(',')]);
+  }, [filter, categoryIds.join(','), sortFrom?.latitude, sortFrom?.longitude]);
 
   useEffect(() => {
     refetch();

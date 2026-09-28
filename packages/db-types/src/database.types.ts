@@ -170,13 +170,13 @@ isOneToOne: false
                   ]
                 },"venues": {
                   Row: {
-                    "address": string | null,"created_at": string,"created_by": string | null,"description": string | null,"id": string,"instagram": string | null,"location": unknown,"name": string,"neighborhood": string | null,"photo_url": string | null,"slug": string,"timezone": string,"verified": boolean,"website": string | null
+                    "address": string | null,"created_at": string,"created_by": string | null,"description": string | null,"id": string,"instagram": string | null,"lat": number | null,"lng": number | null,"location": unknown,"name": string,"neighborhood": string | null,"photo_url": string | null,"slug": string,"timezone": string,"verified": boolean,"website": string | null
                   }
                   Insert: {
-                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"id"?: string,"instagram"?: string | null,"location"?: unknown,"name": string,"neighborhood"?: string | null,"photo_url"?: string | null,"slug": string,"timezone": string,"verified"?: boolean,"website"?: string | null
+                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"id"?: string,"instagram"?: string | null,"lat"?: never,"lng"?: never,"location"?: unknown,"name": string,"neighborhood"?: string | null,"photo_url"?: string | null,"slug": string,"timezone": string,"verified"?: boolean,"website"?: string | null
                   }
                   Update: {
-                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"id"?: string,"instagram"?: string | null,"location"?: unknown,"name"?: string,"neighborhood"?: string | null,"photo_url"?: string | null,"slug"?: string,"timezone"?: string,"verified"?: boolean,"website"?: string | null
+                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"id"?: string,"instagram"?: string | null,"lat"?: never,"lng"?: never,"location"?: unknown,"name"?: string,"neighborhood"?: string | null,"photo_url"?: string | null,"slug"?: string,"timezone"?: string,"verified"?: boolean,"website"?: string | null
                   }
                   Relationships: [
                     {

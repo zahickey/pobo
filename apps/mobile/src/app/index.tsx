@@ -5,13 +5,17 @@ import { router } from 'expo-router';
 import { themes, typography, space } from '@pobo/tokens';
 import { useCategories } from '../hooks/useCategories';
 import { useOccurrences } from '../hooks/useOccurrences';
+import { useUserLocation } from '../lib/location';
 import type { TimeFilter } from '../lib/time';
 import { TimeFilterChips } from '../components/TimeFilterChips';
 import { CategoryChips } from '../components/CategoryChips';
 import { EventCard } from '../components/EventCard';
+import { DiscoveryMap } from '../components/DiscoveryMap';
 
-// Discovery / list view (roadmap Step 4). Map pins are the next increment —
-// deferred until Mapbox vs. Google Maps is decided (see brief §9).
+// Discovery: map (default) + list drawer showing the same results, per the
+// brief's §3 Discovery section. The "drawer" here is a fixed split rather
+// than a draggable bottom sheet — a reasonable first cut; a real drag sheet
+// is a polish pass, not a functional gap.
 export default function Discovery() {
   const colorScheme = useColorScheme();
   const t = themes[colorScheme === 'dark' ? 'dark' : 'light'];
@@ -20,7 +24,8 @@ export default function Discovery() {
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
 
   const { categories } = useCategories();
-  const { occurrences, loading, error, refetch } = useOccurrences(timeFilter, categoryIds);
+  const { location: userLocation } = useUserLocation();
+  const { occurrences, loading, error, refetch } = useOccurrences(timeFilter, categoryIds, userLocation);
 
   function toggleCategory(id: string) {
     setCategoryIds((prev) => (prev.includes(id) ? prev.filter((existing) => existing !== id) : [...prev, id]));
@@ -39,11 +44,20 @@ export default function Discovery() {
 
       <CategoryChips categories={categories} selectedIds={categoryIds} onToggle={toggleCategory} />
 
+      <View style={styles.mapWrap}>
+        <DiscoveryMap
+          occurrences={occurrences}
+          userLocation={userLocation}
+          onSelect={(id) => router.push(`/event/${id}`)}
+        />
+      </View>
+
       {error && (
         <Text style={[styles.error, { color: t.text }]}>Couldn't load events: {error}</Text>
       )}
 
       <FlatList
+        style={styles.list}
         data={occurrences}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
@@ -84,6 +98,14 @@ const styles = StyleSheet.create({
   filterRow: {
     paddingHorizontal: space.lg,
     paddingBottom: space.md,
+  },
+  mapWrap: {
+    height: 260,
+    marginHorizontal: space.lg,
+    marginBottom: space.md,
+  },
+  list: {
+    flex: 1,
   },
   listContent: {
     paddingHorizontal: space.lg,

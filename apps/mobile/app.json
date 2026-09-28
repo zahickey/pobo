@@ -25,6 +25,12 @@
       "expo-font",
       "expo-splash-screen",
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "PoBo uses your location to show events near you."
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "ios": {
