@@ -1,5 +1,5 @@
 .page {
-  max-width: 640px;
+  max-width: 880px;
   margin: 0 auto;
   padding: var(--space-xl) var(--space-lg) var(--space-3xl);
   font-family: var(--font-body);

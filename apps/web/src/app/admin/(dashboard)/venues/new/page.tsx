@@ -21,9 +21,15 @@ export default async function NewVenue({
           <label htmlFor="address">Address</label>
           <input id="address" name="address" placeholder="628 Divisadero St, San Francisco, CA" />
         </div>
-        <div className={styles.field}>
-          <label htmlFor="neighborhood">Neighborhood</label>
-          <input id="neighborhood" name="neighborhood" placeholder="NoPa" />
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label htmlFor="neighborhood">Neighborhood</label>
+            <input id="neighborhood" name="neighborhood" placeholder="NoPa" />
+          </div>
+          <div className={styles.field}>
+            <label htmlFor="timezone">Timezone</label>
+            <input id="timezone" name="timezone" defaultValue="America/Los_Angeles" required />
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.field}>
@@ -38,10 +44,6 @@ export default async function NewVenue({
         <p className={styles.itemMeta} style={{ marginTop: -8 }}>
           No geocoding hooked up yet — right-click the spot on Google Maps and copy the coordinates.
         </p>
-        <div className={styles.field}>
-          <label htmlFor="timezone">Timezone</label>
-          <input id="timezone" name="timezone" defaultValue="America/Los_Angeles" required />
-        </div>
         <div className={styles.field}>
           <label htmlFor="description">Description</label>
           <textarea id="description" name="description" rows={3} />

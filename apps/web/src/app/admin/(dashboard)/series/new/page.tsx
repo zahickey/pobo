@@ -32,32 +32,34 @@ export default async function NewSeries({
         <p className={styles.empty}>Add a venue first — there are none to attach this to yet.</p>
       )}
       <form action={createSeriesAction} className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="venue_id">Venue *</label>
-          <select id="venue_id" name="venue_id" required defaultValue="">
-            <option value="" disabled>
-              Select a venue
-            </option>
-            {venues?.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label htmlFor="venue_id">Venue *</label>
+            <select id="venue_id" name="venue_id" required defaultValue="">
+              <option value="" disabled>
+                Select a venue
               </option>
-            ))}
-          </select>
-        </div>
+              {venues?.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className={styles.field}>
-          <label htmlFor="category_id">Category *</label>
-          <select id="category_id" name="category_id" required defaultValue="">
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories?.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
+          <div className={styles.field}>
+            <label htmlFor="category_id">Category *</label>
+            <select id="category_id" name="category_id" required defaultValue="">
+              <option value="" disabled>
+                Select a category
               </option>
-            ))}
-          </select>
+              {categories?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className={styles.field}>
@@ -104,14 +106,16 @@ export default async function NewSeries({
           </div>
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="duration_minutes">Duration (minutes) *</label>
-          <input id="duration_minutes" name="duration_minutes" type="number" required defaultValue={120} />
-        </div>
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label htmlFor="duration_minutes">Duration (minutes) *</label>
+            <input id="duration_minutes" name="duration_minutes" type="number" required defaultValue={120} />
+          </div>
 
-        <div className={styles.field}>
-          <label htmlFor="timezone">Timezone</label>
-          <input id="timezone" name="timezone" defaultValue="America/Los_Angeles" required />
+          <div className={styles.field}>
+            <label htmlFor="timezone">Timezone</label>
+            <input id="timezone" name="timezone" defaultValue="America/Los_Angeles" required />
+          </div>
         </div>
 
         <button type="submit" className={styles.submitButton}>
