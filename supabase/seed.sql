@@ -59,9 +59,37 @@ select
   'America/Los_Angeles',
   'FREQ=WEEKLY;BYDAY=FR';
 
+-- A couple of one-off series so every time filter ("Now" needs something live
+-- or starting within the hour) has something to show in local dev, regardless
+-- of what day/time it actually is when you seed.
+insert into event_series (id, venue_id, title, description, category_id, price_text, dtstart_local, duration_minutes, timezone, rrule)
+select
+  '00000000-0000-0000-0000-000000000012'::uuid,
+  '00000000-0000-0000-0000-000000000001'::uuid,
+  'Live Jazz',
+  'Local trio, no cover.',
+  (select id from categories where slug = 'live-music'),
+  'Free',
+  '2025-01-01 19:00:00'::timestamp,
+  150,
+  'America/Los_Angeles',
+  null
+union all
+select
+  '00000000-0000-0000-0000-000000000013'::uuid,
+  '00000000-0000-0000-0000-000000000001'::uuid,
+  'Stand-Up Open Mic',
+  'Sign up at the door, 5 minutes a set.',
+  (select id from categories where slug = 'comedy'),
+  'Cover $10',
+  '2025-01-01 21:00:00'::timestamp,
+  120,
+  'America/Los_Angeles',
+  null;
+
 -- Occurrences are normally generated from event_series by the recurrence Edge
--- Function (roadmap Step 2). Seed a couple of near-term ones directly so local
--- discovery queries have something to return before that function exists.
+-- Function (roadmap Step 2). Seed these directly, relative to now(), so local
+-- discovery queries have something to return before that function has run.
 insert into occurrences (series_id, venue_id, starts_at, ends_at)
 values
   (
@@ -75,4 +103,18 @@ values
     '00000000-0000-0000-0000-000000000002',
     now() + interval '1 day',
     now() + interval '1 day 3 hours'
+  ),
+  (
+    -- live right now
+    '00000000-0000-0000-0000-000000000012',
+    '00000000-0000-0000-0000-000000000001',
+    now() - interval '20 minutes',
+    now() + interval '90 minutes'
+  ),
+  (
+    -- starting soon
+    '00000000-0000-0000-0000-000000000013',
+    '00000000-0000-0000-0000-000000000001',
+    now() + interval '30 minutes',
+    now() + interval '150 minutes'
   );
